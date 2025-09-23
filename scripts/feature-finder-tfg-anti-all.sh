@@ -1,0 +1,2 @@
+bash feature-finder-general.sh '../data/mzML-converted/' '' '../mzML-converted/' 'SM_101_' 'SM_107_' 'SM_110_' 'SM_113_' 'SM_119_' 'SM_122_' 'SM_125_' 'SM_131_' 'SM_134_' 'SM_137_' 'SM_149_' 'SM_152_' 'SM_155_' 'SM_161_' 'SM_164_' 'SM_167_' 'SM_173_' 'SM_176_' 'SM_179_' 'SM_185_' 'SM_188_' 'SM_191_' 'SM_200_' 'SM_206_' 'SM_209_' 'SM_212_' 'SM_215_' 'SM_221_' 'SM_227_' 'SM_230_' 'SM_233_' 'SM_59_' 'SM_62_' 'SM_65_' 'SM_71_' 'SM_77_' 'SM_83_' 'SM_86_' 'SM_89_' 'SM_95_' 'SM_98_'
+
