@@ -14,7 +14,7 @@ setwd('~/My Drive (jspmccain@gmail.com)/Projects/amundsen-prot/')
 # reading in data ---------------------------------------------------------
 
 ## read in the peptide amounts
-peptide_amounts <- read_excel(path = "data/peptide_amounts_left.xlsx", sheet = 4) %>% 
+peptide_amounts <- read_excel(path = "data/peptide_amounts_left_sheet_4.xlsx", sheet = 1) %>% 
   dplyr::rename(sample_id = `short sample`,
                 ms_sample = sample,
                 ug_loaded = `ug total protein loaded`)
@@ -30,7 +30,7 @@ peptide_to_protein <- read_excel(path = 'data/Amudsen_SRM_data_2021/Sample_SRM_e
 taxonomic_specific_biomass <- read.csv("data/intermediate_data/total_taxonomix_biomass_per_filter.csv")
 
 ## read in the proportion of frag species biomass per sample id
-sample_id_frag_biomass <- read.csv('data/intermediate_data/all_avail_csvs_normed_cyl_kerg_abundance_w_peps.csv')
+sample_id_frag_biomass <- read.csv('data/all_avail_csvs_normed_cyl_kerg_abundance_w_peps.csv')
 
 ### read in environmental data associated with a single filter
 env_filter_data <- read.csv("data/protein_sample_sheets_with_metal_data.csv") %>% 

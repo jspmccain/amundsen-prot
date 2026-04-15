@@ -1,4 +1,4 @@
-# setwd('~/Google Drive/My Drive/Projects/amundsen-prot/')
+# setwd('~/My Drive (jspmccain@gmail.com)/Projects/amundsen-prot/')
 
 ## This script goes through the Fragilariopsis cylindrus proteomic data and makes figures.
 
@@ -7,6 +7,7 @@ library(dplyr)
 library(GGally)
 library(reshape2)
 library(ggplot2)
+library(readr)
 library(ggpubr)
 library(ggExtra)
 
@@ -19,7 +20,7 @@ df_treat$replicate <- as.factor(df_treat$replicate)
 df_treat$treat <- factor(df_treat$treat, levels = c('Low Fe', 'Medium Fe', 'High Fe', 'Low Mn, High Fe'))
 
 ## Read in the proteomic data.
-prot_data <- read_tsv('data/frag_cyl_culture_data/dia_frag_iq_02.tsv') %>% 
+prot_data <- read_tsv('data/dia_frag_iq_02.tsv') %>% 
   dplyr::rename(protein_data = Protein.Group,
                 protein_list = `All Mapped Proteins`)
 
@@ -41,17 +42,17 @@ prot_data_long_all <- prot_data %>%
 prot_data_subset <- prot_data %>% 
   dplyr::filter(grepl(pattern = 'photosystem', x = protein_data))
 
-write.csv(prot_data_subset, 
-          file = 'data/frag_cyl_culture_data/photosystem_protein_data_frag_cyl_subset.csv',
-          row.names = FALSE)
+# write.csv(prot_data_subset, 
+#           file = 'data/frag_cyl_culture_data/photosystem_protein_data_frag_cyl_subset.csv',
+#           row.names = FALSE)
+# 
+# ## manually grouped, and now reading in again
+# prot_data_subset_ps <- read.csv('data/frag_cyl_culture_data/photosystem_protein_data_frag_cyl_subset_manual_groupings.csv')
 
-## manually grouped, and now reading in again
-prot_data_subset_ps <- read.csv('data/frag_cyl_culture_data/photosystem_protein_data_frag_cyl_subset_manual_groupings.csv')
-
-prot_data_subset_ps_long <- prot_data_subset_ps %>% 
-  dplyr::select(-n_fragments, -n_peptides) %>% 
-  melt(variable.name = 'replicate') %>% 
-  inner_join(df_treat, by = 'replicate')
+# prot_data_subset_ps_long <- prot_data_subset_ps %>% 
+#   dplyr::select(-n_fragments, -n_peptides) %>% 
+#   melt(variable.name = 'replicate') %>% 
+#   inner_join(df_treat, by = 'replicate')
 
 ## This is for making the axes pretty.
 scaleFUN <- function(x) sprintf("%.1f", x)
@@ -74,6 +75,10 @@ make_protein_plot <- function(protein_data_name, df_input = prot_data_subset_ps_
   ## make the figure
   output_fig <- df_subset %>% 
     ggplot(aes(x = treat, y = value)) +
+    geom_hline(yintercept = df_subset$value %>% max(na.rm = TRUE),
+               lty = 2, colour = 'grey70') + 
+    geom_hline(yintercept = df_subset$value %>% min(na.rm = TRUE),
+               lty = 2, colour = 'grey70') +
     geom_point(size = 3, fill = colour_choice, pch = 21) +
     theme_bw() +
     ggtitle(protein_data_name) +
@@ -106,8 +111,10 @@ make_protein_plot <- function(protein_data_name, df_input = prot_data_subset_ps_
                                          l = 0),  # Reduce margin
       axis.title.y = element_blank()
     ) +
-    geom_vline(xintercept = df_subset$value %>% max(na.rm = TRUE)) +
-    geom_vline(xintercept = df_subset$value %>% min(na.rm = TRUE)) + 
+    geom_vline(xintercept = df_subset$value %>% max(na.rm = TRUE),
+               lty = 2) +
+    geom_vline(xintercept = df_subset$value %>% min(na.rm = TRUE), 
+               lty = 2) + 
     annotate("rect", fill = colour_choice, alpha = 0.5, 
              xmin = df_subset$value %>% min(na.rm = TRUE), 
              xmax = df_subset$value %>% max(na.rm = TRUE),

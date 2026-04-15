@@ -1,9 +1,11 @@
 
 ## Making figures of basic biogeography.
 
+## Need to have run targeted-data-analysis.R and targeted-fitting-stan-model.R first
+
 library(reshape2)
 
-all_avail_csvs_normed_cyl_kerg_abundance_w_peps_read_in <- read.csv('data/intermediate_data/all_avail_csvs_normed_cyl_kerg_abundance_w_peps.csv')
+all_avail_csvs_normed_cyl_kerg_abundance_w_peps_read_in <- read.csv('data/all_avail_csvs_normed_cyl_kerg_abundance_w_peps.csv')
 total_taxonomic_biomass_no_unambiguous_renorm_read_in <- read.csv('data/intermediate_data/total_taxonomic_biomass_no_unambiguous_renorm.csv')
 
 ## read in protein concentration data
@@ -35,11 +37,11 @@ hapt_diatom_plot <- hapt_diatom_df_form %>%
                       limits = c(0.1, 50), 
                       name = expression("Diatom-associated Protein Concentration (" * mu * "g" ~ L^{-1} * ")")) +
   theme_bw() +
-  # theme(legend.position = 'none') +
-  theme(legend.position = c(0.7, 0.7), 
-        legend.direction = "horizontal",
-        legend.box.background = element_rect(color = "grey40", size = 0.6), # Add black border
-  ) +
+  theme(legend.position = 'none') +
+  # theme(legend.position = c(0.7, 0.7), 
+  #       legend.direction = "horizontal",
+  #       legend.box.background = element_rect(color = "grey40", size = 0.6), # Add black border
+  # ) +
   xlab(expression("Diatom-associated Protein Concentration (" * mu * "g" ~ L^{-1} * ")")) +
   ylab(expression("Haptophyte-associated Protein Concentration (" * mu * "g" ~ L^{-1} * ")"));hapt_diatom_plot
 

@@ -337,9 +337,10 @@ estimated_vals_formatted_melt_combined <- estimated_vals_formatted_melt_mean %>%
 
 ## making a profile plot with all proteins on the sample plot
 profiles_proteins_together <- estimated_vals_formatted_melt_combined %>% 
+  dplyr::mutate(station_name = paste0("Station: ", station)) %>% 
   ggplot(aes(x = protein_mean, y = depth_m_from_protein_bottles.x)) +
   geom_point(aes(colour = protein_name_nice)) +
-  facet_wrap(~station, nrow = 2) +
+  facet_wrap(~station_name, nrow = 2) +
   scale_y_reverse() +
   theme_bw() +
   geom_errorbarh(aes(xmin = protein_lower, xmax = protein_upper, colour = protein_name_nice)) +
@@ -497,7 +498,7 @@ mnsod_post_10 <- estimate_pars_me_cov_10_1 %>%
   geom_histogram(fill = 'firebrick4', colour = 'firebrick4') +
   theme_bw() +
   xlim(0, 3) +
-  ggtitle('B.') +
+  ggtitle('C.') +
   ylab('Posterior Probability\nSample Count') +
   theme(plot.caption = element_text(hjust = -1, face= "italic"), #Default is hjust=1
         plot.title.position = "plot", #NEW parameter. Apply for subtitle too.
@@ -509,7 +510,7 @@ cuznsod_post_10 <- estimate_pars_me_cov_10_1 %>%
   ggplot(aes(x = cuzn_umol_per_mol_c)) +
   geom_histogram(fill = 'cadetblue4', colour = 'cadetblue4') +
   theme_bw() +
-  ggtitle('C.') +
+  ggtitle('D.') +
   xlim(0, 1) +
   ylab('') + 
   theme(plot.caption = element_text(hjust = 0, face= "italic"), #Default is hjust=1
@@ -614,7 +615,8 @@ prior_101_p <- data.frame(sim_out = rbeta(n = 1000000, shape1 = 10, shape2 = 1))
   ylab('Probability Density') +
   xlab(expression(zeta~(Proportion~Protein~Metallated)))
 
-layer1 <- ggarrange(mnsod_post_10, cuznsod_post_10, prior_101_p + ggtitle('D.'), nrow = 1, align = 'hv')
+layer1 <- ggarrange(mnsod_post_10 + ggtitle('B.'), cuznsod_post_10 + ggtitle('C.'), prior_101_p + ggtitle('D.'), nrow = 1, align = 'hv')
+layer1_main <- ggarrange(prior_101_p + ggtitle('B.'), mnsod_post_10, cuznsod_post_10, nrow = 1, align = 'hv')
 layer3 <- ggarrange(mnsod_post_2, cuznsod_post_2, prior_21_p + ggtitle('G.'), nrow = 1, align = 'hv')
 layer2 <- ggarrange(mnsod_post_1, cuznsod_post_1, prior_11_p + ggtitle('J.'), nrow = 1, align = 'hv')
 
@@ -622,7 +624,7 @@ stoichiometry_out <- ggarrange(ggplot() + theme_void() + ggtitle('A.'),
                                layer1, layer3, layer2, heights = c(0.1, 0.3, 0.3, 0.3), nrow = 4)
 
 stoichiometry_out_mostly_metal <- ggarrange(ggplot() + theme_void() + ggtitle('A.'), 
-                                            layer1, heights = c(0.25, 0.75), nrow = 2)
+                                            layer1_main, heights = c(0.25, 0.75), nrow = 2)
 
 ggsave(stoichiometry_out, filename = 'figures/stoichiometry_out_supp.svg', 
        height = 10, width = 14)
