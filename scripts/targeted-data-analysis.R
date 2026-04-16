@@ -43,6 +43,13 @@ env_filter_data <- read.csv("data/protein_sample_sheets_with_metal_data.csv") %>
                 lon = longitude,
                 depth_m_from_protein_bottles = Depth)
 
+## writing out the sample id file for PRIDE submission
+sample_id_frag_biomass %>% 
+  dplyr::select(sample_id, file_name) %>% 
+  dplyr::mutate(sample_id = as.character(sample_id)) %>% 
+  inner_join(env_filter_data, by = 'sample_id') %>% 
+  dplyr::select(-time_collected) %>% head()
+
 # format the frag peptide targeted data --------------------------------------------
 
 ## first need to parse the sample id label
