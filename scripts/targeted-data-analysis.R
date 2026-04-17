@@ -41,14 +41,21 @@ env_filter_data <- read.csv("data/protein_sample_sheets_with_metal_data.csv") %>
                 par_from_protein_bottles, temp_from_protein_bottles) %>% 
   dplyr::rename(lat = Latitude,
                 lon = longitude,
-                depth_m_from_protein_bottles = Depth)
+                depth_m_from_protein_bottles = Depth) %>% 
+  dplyr::filter(sample_id != '227b')
+
+env_filter_data[env_filter_data$sample_id == '227a', ]$sample_id <- '227'
 
 ## writing out the sample id file for PRIDE submission
-sample_id_frag_biomass %>% 
+pride_submission_metadata <- sample_id_frag_biomass %>% 
   dplyr::select(sample_id, file_name) %>% 
   dplyr::mutate(sample_id = as.character(sample_id)) %>% 
   inner_join(env_filter_data, by = 'sample_id') %>% 
-  dplyr::select(-time_collected) %>% head()
+  dplyr::select(-time_collected)
+
+write.csv(pride_submission_metadata, 
+          file = "data/intermediate_data/pride_submission_metadata.csv", 
+          quote = FALSE, row.names = FALSE)
 
 # format the frag peptide targeted data --------------------------------------------
 

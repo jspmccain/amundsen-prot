@@ -99,11 +99,14 @@ merge_korean_data_with_tm_data <- function(){
 ### note that the KOPRI data doesn't have station 4.
 kopri_data_out <- merge_korean_data_with_tm_data()
 
-sample_with_metal_with_korean <- cbind(sample_with_metal, kopri_data_out)
+sample_with_metal_with_korean <- cbind(sample_with_metal, kopri_data_out) %>% 
+  dplyr::filter(sample_label != 'PRO_3.0_227b')
 
 write.csv(sample_with_metal_with_korean, 
           file = 'data/intermediate_data/environmental-data-per-sample-id.csv', 
           row.names = FALSE)
+
+sample_with_metal_with_korean[sample_with_metal_with_korean$sample_id == '227a',]$sample_id <- '227'
 
 ## merging the taxonomic, functional, and environmental data together with peptide abundances
 all_avail_csvs_normed_averaged_tax_append <- all_avail_csvs_normed_not_averaged %>% 

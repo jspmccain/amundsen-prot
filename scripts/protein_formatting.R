@@ -98,8 +98,13 @@ write.csv(merged_metal_prot %>%
 ## The column "depth_m" corresponds with "Depth" in the sheet "protein_sample_sheets_with_metal_data.csv". This is the depth at which the protein bottle fired, and is used later to plot.
 man_sel <- read.csv("data/protein_sample_sheets_with_metal_data_manual_selection.csv", check.names = FALSE)
 
+get_last_section <- function(x) {
+  sub(".*_", "", x)
+}
+
 #making a new column with just the number
-man_sel$sample_id <- str_sub(man_sel$sample_label, start = -3)
+man_sel$sample_id <- get_last_section(x = man_sel$sample_label)
+man_sel[man_sel$sample_id == '227a', ]$sample_id <- '227'
 
 ### joining protein amounts to the manual selection sheet
 protein_amounts <- read.csv("data/Amundsen2018_2018_BCA_all_pages.csv")
@@ -124,10 +129,12 @@ man_sel_with_protein <- man_sel %>%
                          dplyr::select(sample_id, total_prot_amount), 
                                                     by = 'sample_id')
 
-sample_chose <- man_sel_with_protein %>% dplyr::filter(sample_choices == 'Y')
+sample_chose <- man_sel_with_protein %>% dplyr::filter(sample_choices == 'Y') %>% 
+  dplyr::mutate(station_name = paste0('Station ', station))
 
 mn_selections_p <- man_sel_with_protein %>%
   dplyr::filter(station != 1, station != 4, station != 10, station != 11) %>% 
+  dplyr::mutate(station_name = paste0('Station ', station)) %>% 
   ggplot(aes(x = depth_m_tm_bottle, y = `dmn_[nm]`)) +
   geom_point() +
   ylab('dMn (nM)') +
@@ -135,13 +142,14 @@ mn_selections_p <- man_sel_with_protein %>%
   xlab('Depth (m)') +
   # ylim(0, 1) +
   theme_bw() +
-  facet_wrap(~station) +
+  facet_wrap(~station_name) +
   geom_line() +
   scale_x_reverse() +
   geom_vline(data = sample_chose, aes(xintercept = depth_m));mn_selections_p
 
 fe_selections_p <- man_sel_with_protein %>%
   dplyr::filter(station != 1, station != 4, station != 10, station != 11) %>% 
+  dplyr::mutate(station_name = paste0('Station ', station)) %>% 
   ggplot(aes(x = depth_m_tm_bottle, y = `dfe_[nm]`)) +
   geom_point() +
   ylab('dFe (nM)') +
@@ -149,13 +157,14 @@ fe_selections_p <- man_sel_with_protein %>%
   coord_flip() +
   ylim(0, 1) +
   theme_bw() +
-  facet_wrap(~station) +
+  facet_wrap(~station_name) +
   geom_line() +
   scale_x_reverse() +
   geom_vline(data = sample_chose, aes(xintercept = depth_m));fe_selections_p
 
 light_selections_p <- merged_metal_prot %>%
   dplyr::filter(station != 1, station != 4, station != 10, station != 11) %>% 
+  dplyr::mutate(station_name = paste0('Station ', station)) %>% 
   ggplot(aes(x = Depth, y = par_from_protein_bottles)) +
   ylab(expression("Photosynthetically Active Radiation (" * mu * "mol photons " * m^-2 * " sec"^-1 * ")")) +
   xlab('Depth (m)') +
@@ -164,13 +173,14 @@ light_selections_p <- merged_metal_prot %>%
   # ylim(0, 1) +
   # xlim(0, 50) +
   theme_bw() +
-  facet_wrap(~station) +
+  facet_wrap(~station_name) +
   geom_line() +
   scale_x_reverse() +
   geom_vline(data = sample_chose, aes(xintercept = depth_m));light_selections_p
 
 temp_selections_p <- man_sel_with_protein %>%
   dplyr::filter(station != 1, station != 4, station != 10, station != 11) %>% 
+  dplyr::mutate(station_name = paste0('Station ', station)) %>% 
   ggplot(aes(x = depth_m, y = temperature)) +
   ylab('Temperature (C)') +
   xlab('Depth (m)') +
@@ -178,7 +188,7 @@ temp_selections_p <- man_sel_with_protein %>%
   coord_flip() +
   # ylim(0, 1) +
   theme_bw() +
-  facet_wrap(~station) +
+  facet_wrap(~station_name) +
   geom_line() +
   scale_x_reverse();temp_selections_p
 

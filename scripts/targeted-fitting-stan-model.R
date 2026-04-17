@@ -337,7 +337,7 @@ estimated_vals_formatted_melt_combined <- estimated_vals_formatted_melt_mean %>%
 
 ## making a profile plot with all proteins on the sample plot
 profiles_proteins_together <- estimated_vals_formatted_melt_combined %>% 
-  dplyr::mutate(station_name = paste0("Station: ", station)) %>% 
+  dplyr::mutate(station_name = paste0("Station ", station)) %>% 
   ggplot(aes(x = protein_mean, y = depth_m_from_protein_bottles.x)) +
   geom_point(aes(colour = protein_name_nice)) +
   facet_wrap(~station_name, nrow = 2) +
@@ -630,24 +630,6 @@ ggsave(stoichiometry_out, filename = 'figures/stoichiometry_out_supp.svg',
        height = 10, width = 14)
 ggsave(stoichiometry_out_mostly_metal, filename = 'figures/stoichiometry_out_most_metal.svg', 
        height = 10*0.4, width = 14)
-
-## Mean value
-plot_of_estimated_mean_prot_per_carbon <- estimate_pars_me_cov_10_1 %>% 
-  spread_draws(ug_prot_per_ug_carbon_frag) %>% 
-  ggplot(aes(ug_prot_per_ug_carbon_frag)) + 
-  geom_histogram() +
-  ylab('Posterior Probability\nSample Count') +
-  xlab(expression(mu*g~Protein~mu*g~Carbon^-1)) +
-  theme_bw();plot_of_estimated_prot_per_carbon
-
-## SD
-plot_of_estimated_sd_prot_per_carbon <- estimate_pars_me_cov_10_1 %>% 
-  spread_draws(sigma_protein_per_carbon_frag) %>% 
-  ggplot(aes(sigma_protein_per_carbon_frag)) + 
-  geom_histogram() +
-  ylab('Posterior Probability\nSample Count') +
-  xlab(expression(mu*g~Protein~mu*g~Carbon^-1)) +
-  theme_bw();plot_of_estimated_sd_prot_per_carbon
 
 posterior_prediction_for_protein_to_carbon <- estimate_pars_me_cov_10_1 %>% 
   spread_draws(ug_prot_per_ug_carbon_post_pred) %>% 
